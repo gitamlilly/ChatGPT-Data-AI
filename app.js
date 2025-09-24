@@ -973,9 +973,83 @@ exportModelBtn.addEventListener('click', () => exportModel());
   });
 })();
 
+
+
 // ------------------
 // Initial call
 // ------------------
 postProcessState();
+
+
+
+// Fix: constrain charts and tables with max-height and scrolling to avoid infinite vertical expansion
+
+// Apply CSS dynamically for charts and tables
+(function addGlobalStyles(){
+  const style = document.createElement('style');
+  style.textContent = `
+    #charts canvas, #featureImportance {
+      max-height: 400px !important;
+    }
+    #charts, #featureImportance {
+      overflow-y: auto;
+    }
+    #dataPreview {
+      max-height: 300px;
+      overflow-y: auto;
+      display: block;
+    }
+    table.data-table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    table.data-table th, table.data-table td {
+      border: 1px solid #ccc;
+      padding: 4px 8px;
+      text-align: left;
+    }
+  `;
+  document.head.appendChild(style);
+})();
+
+// When rendering tables, add the data-table class
+function renderTable(data, containerId){
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  container.innerHTML = '';
+  if (!data || data.length === 0) return;
+  const table = document.createElement('table');
+  table.classList.add('data-table');
+  const header = document.createElement('tr');
+  Object.keys(data[0]).forEach(col => {
+    const th = document.createElement('th'); th.textContent = col; header.appendChild(th);
+  });
+  table.appendChild(header);
+  data.forEach(row => {
+    const tr = document.createElement('tr');
+    Object.values(row).forEach(val => {
+      const td = document.createElement('td'); td.textContent = val; tr.appendChild(td);
+    });
+    table.appendChild(tr);
+  });
+  container.appendChild(table);
+}
+
+// When creating charts, ensure the container is constrained
+function renderChart(ctx, config, chartKey){
+  destroyChart(chartKey);
+  const chart = new Chart(ctx, config);
+  chartInstances[chartKey] = chart;
+  // constrain parent container height
+  if (ctx.canvas.parentElement){
+    ctx.canvas.parentElement.style.maxHeight = '400px';
+    ctx.canvas.parentElement.style.overflowY = 'auto';
+  }
+  return chart;
+}
+
+// Replace calls to new Chart with renderChart wrapper where necessary
+// Example usage:
+// renderChart(document.getElementById('featureImportance').getContext('2d'), {type:'bar', data:..., options:...}, 'featImp');
 
 // End of app.js
