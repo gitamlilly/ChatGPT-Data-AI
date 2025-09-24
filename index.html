@@ -1,0 +1,114 @@
+<!-- ===== FILE: index.html ===== -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Data Collection & Analysis AI</title>
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Chart.js for quick, reliable charts. Using a CDN keeps this runnable as-is. If you prefer offline, download Chart.js and serve locally. -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header class="app-header">
+    <h1>Data Collection & Analysis — AI Assistant</h1>
+    <p class="sub">Upload CSV, paste data, clean, analyze, visualize, and get automated suggestions.</p>
+  </header>
+
+  <main class="layout">
+    <!-- Left panel: Data collection inputs & controls -->
+    <aside id="left-panel" class="panel">
+      <h2>Data Input</h2>
+
+      <label class="file-label">Upload CSV file
+        <input type="file" id="fileInput" accept="text/csv" />
+      </label>
+
+      <div class="or">— or —</div>
+
+      <label for="pasteArea">Paste CSV / Tabular text</label>
+      <textarea id="pasteArea" placeholder="name,age,salary\nAlice,30,70000\nBob,25,52000"></textarea>
+
+      <div class="row">
+        <button id="parseBtn">Parse Pasted Text</button>
+        <button id="sampleBtn">Load Sample Data</button>
+      </div>
+
+      <hr />
+
+      <h3>Cleaning & Transform</h3>
+      <div class="row">
+        <button id="autoCleanBtn">Auto Clean (Impute + Trim)</button>
+        <button id="exportBtn">Export CSV</button>
+      </div>
+
+      <div class="row">
+        <label>Target (for quick regression)</label>
+        <select id="targetSelect"><option value="">— choose target —</option></select>
+      </div>
+
+      <div class="row">
+        <label>Features (ctrl+click to multi-select)</label>
+        <select id="featuresSelect" multiple size="5"></select>
+      </div>
+
+      <div class="row">
+        <button id="trainBtn">Train Linear Model</button>
+        <button id="autoAnalyzeBtn">Auto Analyze (AI)</button>
+      </div>
+
+      <small class="note">Tip: start with the sample data to explore features quickly.</small>
+    </aside>
+
+    <!-- Middle panel: Visualizations & raw table -->
+    <section id="vis-panel" class="panel">
+      <h2>Visualizations</h2>
+      <div class="charts">
+        <div class="chart-card">
+          <h4>Histogram (selected column)</h4>
+          <select id="histColSelect"></select>
+          <canvas id="histChart" height="200"></canvas>
+        </div>
+        <div class="chart-card">
+          <h4>Scatter Plot (X vs Y)</h4>
+          <div class="row">
+            <select id="xSelect"></select>
+            <select id="ySelect"></select>
+          </div>
+          <canvas id="scatterChart" height="200"></canvas>
+        </div>
+      </div>
+
+      <h3>Data Table</h3>
+      <div id="dataTable" class="table-wrapper"></div>
+    </section>
+
+    <!-- Right panel: AI analysis & results -->
+    <aside id="analysis-panel" class="panel">
+      <h2>AI Analysis & Suggestions</h2>
+      <div id="summaryBox" class="card">
+        <h4>Dataset Summary</h4>
+        <pre id="summaryPre">(no data loaded)</pre>
+      </div>
+
+      <div id="aiBox" class="card">
+        <h4>Automated Suggestions</h4>
+        <ul id="suggestionsList"><li>No suggestions yet — load data.</li></ul>
+      </div>
+
+      <div id="modelBox" class="card">
+        <h4>Model Output</h4>
+        <pre id="modelPre">(no model trained)</pre>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="footer">
+    <small>Made with ❤️ — designed for local usage in VS Code. See comments in app.js for the developer thought process.</small>
+  </footer>
+
+  <!-- Link the primary application script -->
+  <script src="app.js"></script>
+</body>
+</html>
+
